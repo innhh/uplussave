@@ -1,0 +1,15 @@
+{
+  "short_name": "U+ 알뜰모바일 신청",
+  "name": "(주)인화 네트워크 U+ 알뜰모바일 온라인 신청",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

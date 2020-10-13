@@ -64,7 +64,7 @@ function App() {
         hpnumber2: "", //희망번호 4자리
         hpnumber3: "", //희망번호 4자리
         memo: "", //추가 요청사항
-        minor: false, //미성년자 여부
+        minor: "성인", //미성년자 여부
         parent: "", //법정대리인 이름
         parent_birth: "", //법정대리인 생년월일
         parent_tel: "", //법정대리인 연락처
@@ -280,6 +280,11 @@ function App() {
                 <input type="hidden" name="raddr1" value={applyData.raddr1}></input>
                 <input type="hidden" name="raddr2" value={applyData.raddr2}></input>
                 <input type="hidden" name="paper_method" value={applyData.paper_method}></input>
+                <input type="hidden" name="conditionCheck" value={applyData.conditionCheck}></input>
+                <input type="hidden" name="contractCheck" value={applyData.contractCheck}></input>
+                <input type="hidden" name="privateInfoCheck" value={applyData.privateInfoCheck}></input>
+                <input type="hidden" name="deputyCheck" value={applyData.deputyCheck}></input>
+
                 <input type="file" id="b_file0" name="b_file0" style={{ marginTop: "0.3rem" }}></input>
                 <input type="file" id="b_file1" name="b_file1" style={{ marginTop: "0.3rem" }}></input>
                 <input type="file" id="b_file2" name="b_file2" style={{ marginTop: "0.3rem" }}></input>

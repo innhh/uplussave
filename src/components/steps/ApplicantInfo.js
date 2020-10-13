@@ -15,7 +15,7 @@ const SubContainer = styled.div`
 const SubTitle = styled.div`
     font-size: 0.8rem;
     color: ${palette.gray};
-    margin-top: 0.5rem;
+    margin-top: 2rem;
 `;
 
 const StyledFormControlLabel = withStyles({
@@ -75,7 +75,7 @@ const ApplicantInfo = ({ applyData, setApplyData, movePrev, moveNext, showAlert 
         setApplyData({ ...applyData, zip: zip, addr1: addr });
     };
     const handleMinor = (e) => {
-        setApplyData({ ...applyData, minor: e.target.checked });
+        setApplyData({ ...applyData, minor: e.target.checked ? "미성년자" : "성인" });
     };
 
     return (
@@ -110,6 +110,7 @@ const ApplicantInfo = ({ applyData, setApplyData, movePrev, moveNext, showAlert 
                 maxLength="50"
             ></InputControl>
 
+            <SubTitle>가입자 주소</SubTitle>
             <SubContainer>
                 <InputControl
                     name="zip"
@@ -176,11 +177,11 @@ const ApplicantInfo = ({ applyData, setApplyData, movePrev, moveNext, showAlert 
             ></InputControl>
 
             <StyledFormControlLabel
-                control={<Switch name="minor" checked={applyData.minor} onChange={handleMinor} color="secondary" />}
+                control={<Switch name="minor" checked={applyData.minor === "미성년자"} onChange={handleMinor} color="secondary" />}
                 label="미성년자 여부"
                 labelPlacement="start"
             />
-            <Collapse in={applyData.minor}>
+            <Collapse in={applyData.minor === "미성년자"}>
                 <InputControl
                     name="parent"
                     label="법정대리인 이름"

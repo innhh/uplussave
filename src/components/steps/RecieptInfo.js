@@ -58,7 +58,7 @@ const RecieptInfo = ({ applyData, setApplyData, movePrev, moveNext, showAlert, o
         $file2.attr("id", "file2");
         $file2.change(handleChangeFile(2));
         $files.append($file2);
-    });
+    }, []);
 
     return (
         <Container>

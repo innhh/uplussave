@@ -92,9 +92,9 @@ const RecieptInfo = ({ applyData, setApplyData, movePrev, moveNext, showAlert, s
             if (e.target.files[0].type.startsWith("image")) {
                 setBackDropOpen(true);
                 new Compressor(e.target.files[0], {
-                    maxWidth: 800,
-                    maxHeight: 800,
-                    quality: 0.6,
+                    maxWidth: 1000,
+                    maxHeight: 1000,
+                    quality: 0.8,
                     success(result) {
                         _append(result);
                         setBackDropOpen(false);
@@ -196,7 +196,6 @@ const RecieptInfo = ({ applyData, setApplyData, movePrev, moveNext, showAlert, s
                 <StyledAlert severity="warning">
                     <div>구비서류 등록시 주의사항</div>
                     <StyledUl>
-                        <li>2MB 이상은 첨부할 수 없습니다</li>
                         <li>
                             청소년 고객은 법정대리인 신분증(앞면)과 가족관계증명서(3개월 이내 발급본)을 사진 또는
                             스캔하여 첨부바랍니다 (첨부가 어려운 경우에는 판매자에게 별도 문의 바랍니다)

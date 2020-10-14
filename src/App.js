@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
-import $ from "jquery";
+import React, { useState } from "react";
 import { Stepper, Step, StepLabel, StepContent, Backdrop, CircularProgress } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
-import emailjs from "emailjs-com";
+import $ from "jquery";
 import {
     callplanOptions,
     hpcolorOptions,
@@ -90,9 +89,8 @@ function App() {
         contractCheck: false, //약정관련 동의
         privateInfoCheck: false, //약관 동의서 및 개인정보 취급방침
         deputyCheck: false, //가입신청서 대필
+        b_files: [], //첨부파일
     });
-
-    const regist_form = useRef(null);
 
     const movePrev = () => {
         completeSteps[activeStep] = false;
@@ -116,34 +114,72 @@ function App() {
         }
 
         setBackDropOpen(true);
-        emailjs.sendForm("service_78f2lfo", "template_7lx0n2f", regist_form.current).then(
-            function (response) {
+
+        const formData = new FormData();
+        formData.append("callplan", applyData.callplan);
+        formData.append("hpcolor", applyData.hpcolor);
+        formData.append("uname", applyData.uname);
+        formData.append("birth", applyData.birth);
+        formData.append("hp2", applyData.hp2);
+        formData.append("email", applyData.email);
+        formData.append("zip", applyData.zip);
+        formData.append("addr1", applyData.addr1);
+        formData.append("addr2", applyData.addr2);
+        formData.append("hpnumber1", applyData.hpnumber1);
+        formData.append("hpnumber2", applyData.hpnumber2);
+        formData.append("hpnumber3", applyData.hpnumber3);
+        formData.append("memo", applyData.memo);
+        formData.append("minor", applyData.minor);
+        formData.append("parent", applyData.parent);
+        formData.append("parent_birth", applyData.parent_birth);
+        formData.append("parent_tel", applyData.parent_tel);
+        formData.append("parent_rel", applyData.parent_rel);
+        formData.append("pay_gubun", applyData.pay_gubun);
+        formData.append("pay_method", applyData.pay_method);
+        formData.append("pzip", applyData.pzip);
+        formData.append("paddr1", applyData.paddr1);
+        formData.append("paddr2", applyData.paddr2);
+        formData.append("bank", applyData.bank);
+        formData.append("banknum", applyData.banknum);
+        formData.append("bankowner", applyData.bankowner);
+        formData.append("owner_real", applyData.owner_real);
+        formData.append("owner_birth", applyData.owner_birth);
+        formData.append("rname", applyData.rname);
+        formData.append("rhp", applyData.rhp);
+        formData.append("rzip", applyData.rzip);
+        formData.append("raddr1", applyData.raddr1);
+        formData.append("raddr2", applyData.raddr2);
+        formData.append("paper_method", applyData.paper_method);
+        formData.append("conditionCheck", applyData.conditionCheck);
+        formData.append("contractCheck", applyData.contractCheck);
+        formData.append("privateInfoCheck", applyData.privateInfoCheck);
+        formData.append("deputyCheck", applyData.deputyCheck);
+
+        if (applyData.paper_method === "파일첨부") {
+            applyData.b_files.forEach((b_file, index) => {
+                formData.append(`b_file${index}`, b_file.file, b_file.file.name);
+            });
+        }
+
+        formData.append("service_id", "service_78f2lfo");
+        formData.append("template_id", "template_7lx0n2f");
+        formData.append("user_id", "user_0nGKbHBBBnrcCZKwoXeAj");
+
+        $.ajax("https://api.emailjs.com/api/v1.0/email/send-form", {
+            type: "POST",
+            data: formData,
+            contentType: false, // auto-detection
+            processData: false, // no need to parse formData to string
+        })
+            .done(function () {
                 setBackDropOpen(false);
                 setIsSuccess(true);
-            },
-            function (error) {
+            })
+            .fail(function (error) {
                 window.alert("신청이 실패했습니다. 다시 시도해 주시거나 고객센터 문의바랍니다.");
                 setBackDropOpen(false);
-            }
-        );
+            });
     };
-
-    function onChangeFile(index, e) {
-        const id = `b_file${index}`;
-        const $form = $(regist_form.current);
-        const $cloneFile = $(e.target).clone();
-        $cloneFile.attr("id", id);
-
-        const $prevFile = $("#" + id);
-        $prevFile && $prevFile.remove();
-
-        $form.append($cloneFile);
-    }
-
-    //emailjs 초기화
-    useEffect(() => {
-        emailjs.init("user_0nGKbHBBBnrcCZKwoXeAj");
-    }, []);
 
     return (
         <Container>
@@ -218,7 +254,7 @@ function App() {
                                     movePrev={movePrev}
                                     moveNext={moveNext}
                                     showAlert={showAlert}
-                                    onChangeFile={onChangeFile}
+                                    setBackDropOpen={setBackDropOpen}
                                 ></RecieptInfo>
                             </StepContent>
                         </Step>
@@ -244,51 +280,6 @@ function App() {
             <Backdrop open={backDropOpen} className={classes.backdrop}>
                 <CircularProgress color="inherit" />
             </Backdrop>
-
-            <form id="regist_form" ref={regist_form} style={{ display: "none" }}>
-                <input type="hidden" name="callplan" value={applyData.callplan}></input>
-                <input type="hidden" name="hpcolor" value={applyData.hpcolor}></input>
-                <input type="hidden" name="uname" value={applyData.uname}></input>
-                <input type="hidden" name="birth" value={applyData.birth}></input>
-                <input type="hidden" name="hp2" value={applyData.hp2}></input>
-                <input type="hidden" name="email" value={applyData.email}></input>
-                <input type="hidden" name="zip" value={applyData.zip}></input>
-                <input type="hidden" name="addr1" value={applyData.addr1}></input>
-                <input type="hidden" name="addr2" value={applyData.addr2}></input>
-                <input type="hidden" name="hpnumber1" value={applyData.hpnumber1}></input>
-                <input type="hidden" name="hpnumber2" value={applyData.hpnumber2}></input>
-                <input type="hidden" name="hpnumber3" value={applyData.hpnumber3}></input>
-                <input type="hidden" name="memo" value={applyData.memo}></input>
-                <input type="hidden" name="minor" value={applyData.minor}></input>
-                <input type="hidden" name="parent" value={applyData.parent}></input>
-                <input type="hidden" name="parent_birth" value={applyData.parent_birth}></input>
-                <input type="hidden" name="parent_tel" value={applyData.parent_tel}></input>
-                <input type="hidden" name="parent_rel" value={applyData.parent_rel}></input>
-                <input type="hidden" name="pay_gubun" value={applyData.pay_gubun}></input>
-                <input type="hidden" name="pay_method" value={applyData.pay_method}></input>
-                <input type="hidden" name="pzip" value={applyData.pzip}></input>
-                <input type="hidden" name="paddr1" value={applyData.paddr1}></input>
-                <input type="hidden" name="paddr2" value={applyData.paddr2}></input>
-                <input type="hidden" name="bank" value={applyData.bank}></input>
-                <input type="hidden" name="banknum" value={applyData.banknum}></input>
-                <input type="hidden" name="bankowner" value={applyData.bankowner}></input>
-                <input type="hidden" name="owner_real" value={applyData.owner_real}></input>
-                <input type="hidden" name="owner_birth" value={applyData.owner_birth}></input>
-                <input type="hidden" name="rname" value={applyData.rname}></input>
-                <input type="hidden" name="rhp" value={applyData.rhp}></input>
-                <input type="hidden" name="rzip" value={applyData.rzip}></input>
-                <input type="hidden" name="raddr1" value={applyData.raddr1}></input>
-                <input type="hidden" name="raddr2" value={applyData.raddr2}></input>
-                <input type="hidden" name="paper_method" value={applyData.paper_method}></input>
-                <input type="hidden" name="conditionCheck" value={applyData.conditionCheck}></input>
-                <input type="hidden" name="contractCheck" value={applyData.contractCheck}></input>
-                <input type="hidden" name="privateInfoCheck" value={applyData.privateInfoCheck}></input>
-                <input type="hidden" name="deputyCheck" value={applyData.deputyCheck}></input>
-
-                <input type="file" id="b_file0" name="b_file0" style={{ marginTop: "0.3rem" }}></input>
-                <input type="file" id="b_file1" name="b_file1" style={{ marginTop: "0.3rem" }}></input>
-                <input type="file" id="b_file2" name="b_file2" style={{ marginTop: "0.3rem" }}></input>
-            </form>
         </Container>
     );
 }

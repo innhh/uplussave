@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import $ from "jquery";
-import { Collapse } from "@material-ui/core";
+import { Collapse, Button, IconButton, Icon } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import styled from "styled-components";
+import Compressor from "compressorjs";
+import palette from "../../utils/palette";
 import SelectControl from "../SelectControl";
 import { paper_methodOptions } from "../../utils/constants";
 import MoveSteps from "../MoveSteps";
@@ -24,41 +26,117 @@ const StyledAlert = styled(Alert)`
     margin-top: 1rem;
 `;
 
-const RecieptInfo = ({ applyData, setApplyData, movePrev, moveNext, showAlert, onChangeFile }) => {
-    const validate = () => {
-        const file0 = $("#file0")[0].files[0] || { size: 0 };
-        const file1 = $("#file1")[0].files[0] || { size: 0 };
-        const file2 = $("#file2")[0].files[0] || { size: 0 };
+const SubContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 0.5rem;
+`;
 
-        if (file0.size + file1.size + file2.size >= 2097152) {
-            showAlert("첨부파일이 총 2MB이상입니다. 다시 첨부해 주시기 바랍니다");
-            return false;
+const Volumes = styled.div`
+    font-size: 0.8rem;
+    color: ${palette.gray};
+`;
+
+const FileContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+`;
+
+const FileContent = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+`;
+
+const FileName = styled.div`
+    display: flex;
+    align-items: center;
+    width: 70%;
+
+    & .b_filename {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding: 0 0.2rem;
+    }
+`;
+
+const FileSize = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 30%;
+`;
+
+const RecieptInfo = ({ applyData, setApplyData, movePrev, moveNext, showAlert, setBackDropOpen }) => {
+    const applyOf = (key) => (x) => setApplyData({ ...applyData, [key]: x });
+    const handleClick = (e) => {
+        let index = null;
+        for (let i = 0; i < 5; i++) {
+            if (!applyData.b_files.some((x) => x.index === i)) {
+                index = i;
+                break;
+            }
         }
 
-        return true;
+        let $file = $("<input/>", { type: "file" });
+        $file.on("change", function (e) {
+            if (!e.target.files || !e.target.files[0]) {
+                $file.remove();
+                return;
+            }
+
+            if (e.target.files[0].type.startsWith("image")) {
+                setBackDropOpen(true);
+                new Compressor(e.target.files[0], {
+                    maxWidth: 800,
+                    maxHeight: 800,
+                    quality: 0.6,
+                    success(result) {
+                        _append(result);
+                        setBackDropOpen(false);
+                        $file.remove();
+                    },
+                    error(err) {
+                        window.alert("다시 시도해 주세요");
+                        setBackDropOpen(false);
+                        $file.remove();
+                    },
+                });
+            } else {
+                _append(e.target.files[0]);
+                $file.remove();
+            }
+
+            function _append(file) {
+                const size = applyData.b_files.reduce((sum, b_file) => (sum += b_file.file.size), 0) + file.size;
+                if (size >= 2097152) {
+                    showAlert("첨부파일이 총 2MB이상입니다. 다시 첨부해 주시기 바랍니다");
+                    return;
+                }
+
+                const b_files = [...applyData.b_files];
+                b_files.push({
+                    index: index,
+                    file: file,
+                });
+                setApplyData({ ...applyData, b_files });
+            }
+        });
+        $file.trigger("click");
     };
-    const applyOf = (key) => (x) => setApplyData({ ...applyData, [key]: x });
-    const handleChangeFile = (index) => (e) => onChangeFile(index, e);
-    
-    useEffect(() => {
-        const $files = $("#files");
-        $files.empty();
 
-        const $file0 = $("#b_file0").clone();
-        $file0.attr("id", "file0");
-        $file0.change(handleChangeFile(0));
-        $files.append($file0);
-
-        const $file1 = $("#b_file1").clone();
-        $file1.attr("id", "file1");
-        $file1.change(handleChangeFile(1));
-        $files.append($file1);
-
-        const $file2 = $("#b_file2").clone();
-        $file2.attr("id", "file2");
-        $file2.change(handleChangeFile(2));
-        $files.append($file2);
-    }, []);
+    const handleRemoveFile = (index, e) => {
+        const b_files = [...applyData.b_files];
+        const idx = b_files.findIndex((x) => x.index === index);
+        if (idx > -1) {
+            b_files.splice(idx, 1);
+            setApplyData({ ...applyData, b_files });
+        }
+    };
 
     return (
         <Container>
@@ -71,12 +149,54 @@ const RecieptInfo = ({ applyData, setApplyData, movePrev, moveNext, showAlert, o
             ></SelectControl>
 
             <Collapse in={applyData.paper_method === "파일첨부"}>
-                <div id="files"></div>
+                <SubContainer>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        disableElevation
+                        onClick={handleClick}
+                        disabled={applyData.b_files.length > 4}
+                        size="small"
+                    >
+                        첨부하기({applyData.b_files.length}/5)
+                    </Button>
+                    <Volumes>
+                        {(
+                            applyData.b_files.reduce((sum, b_file) => (sum += b_file.file.size), 0) /
+                            1024 /
+                            1024
+                        ).toFixed(1)}
+                        Mb / 2Mb
+                    </Volumes>
+                </SubContainer>
+
+                <FileContainer>
+                    {applyData.b_files.map((b_file) => {
+                        return (
+                            <FileContent key={b_file.index}>
+                                <FileName>
+                                    <Icon size="small" color="error">
+                                        description
+                                    </Icon>
+                                    <div class="b_filename">{b_file.file.name}</div>
+                                </FileName>
+                                <FileSize>
+                                    {(b_file.file.size / 1024).toFixed(0) > 999
+                                        ? `${(b_file.file.size / 1024 / 1024).toFixed(1)}Mb`
+                                        : `${(b_file.file.size / 1024).toFixed(0)}kb`}
+                                    <IconButton onClick={handleRemoveFile.bind(this, b_file.index)} size="small">
+                                        <Icon>close</Icon>
+                                    </IconButton>
+                                </FileSize>
+                            </FileContent>
+                        );
+                    })}
+                </FileContainer>
 
                 <StyledAlert severity="warning">
                     <div>구비서류 등록시 주의사항</div>
                     <StyledUl>
-                        <li>첨부한 총 파일의 용량은 2MB 미만이어야 합니다</li>
+                        <li>2MB 이상은 첨부할 수 없습니다</li>
                         <li>
                             청소년 고객은 법정대리인 신분증(앞면)과 가족관계증명서(3개월 이내 발급본)을 사진 또는
                             스캔하여 첨부바랍니다 (첨부가 어려운 경우에는 판매자에게 별도 문의 바랍니다)
@@ -90,7 +210,7 @@ const RecieptInfo = ({ applyData, setApplyData, movePrev, moveNext, showAlert, o
                 </StyledAlert>
             </Collapse>
 
-            <MoveSteps movePrev={movePrev} moveNext={moveNext} validate={validate}></MoveSteps>
+            <MoveSteps movePrev={movePrev} moveNext={moveNext}></MoveSteps>
         </Container>
     );
 };

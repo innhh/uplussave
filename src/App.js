@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
     const classes = useStyles();
-    const [activeStep, setActiveStep] = useState(4);
+    const [activeStep, setActiveStep] = useState(0);
     const [completeSteps, setCompleteSteps] = useState([]);
     const [alertOpen, setAlertOpen] = useState(false);
     const [backDropOpen, setBackDropOpen] = useState(false);

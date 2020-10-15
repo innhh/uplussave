@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "53428255d553649e4ceea83df223df92",
+    "revision": "316f074de79053ef179a231e749af567",
     "url": "/uplussave/index.html"
   },
   {
-    "revision": "14fcec4cc44d4d543f47",
-    "url": "/uplussave/static/css/main.5ecd60fb.chunk.css"
+    "revision": "8c3258f0e1ed61c3f4d3",
+    "url": "/uplussave/static/css/main.69eda509.chunk.css"
   },
   {
-    "revision": "a5292557e25450ef8947",
-    "url": "/uplussave/static/js/2.056e0afb.chunk.js"
+    "revision": "9070c685e3d45c79c543",
+    "url": "/uplussave/static/js/2.1621d3fb.chunk.js"
   },
   {
-    "revision": "3e9ac9801b89ff49348009021ce0f911",
-    "url": "/uplussave/static/js/2.056e0afb.chunk.js.LICENSE.txt"
+    "revision": "e3ece1dfadca719730e694559af26e8a",
+    "url": "/uplussave/static/js/2.1621d3fb.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "14fcec4cc44d4d543f47",
-    "url": "/uplussave/static/js/main.0c5ef5a9.chunk.js"
+    "revision": "8c3258f0e1ed61c3f4d3",
+    "url": "/uplussave/static/js/main.b1629163.chunk.js"
   },
   {
     "revision": "d42a704e2c46a2a3e501",

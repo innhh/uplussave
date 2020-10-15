@@ -166,7 +166,7 @@ const ApplicantInfo = ({ applyData, setApplyData, movePrev, moveNext, showAlert 
                     numberOnly
                 ></InputControl>
             </SubContainer>
-
+ 
             <InputControl
                 name="memo"
                 label="추가 요청사항"

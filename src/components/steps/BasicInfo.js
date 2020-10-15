@@ -20,6 +20,10 @@ const BasicInfo = ({ applyData, setApplyData, moveNext, showAlert }) => {
 
     return (
         <>
+
+
+            동욱 테스트
+
             <InfoItem label="신청상품" value="U+알뜰모바일 선불유심"></InfoItem>
             <InfoItem label="가입구분" value="신규가입"></InfoItem>
             <InfoItem label="약정기간" value="1개월"></InfoItem>

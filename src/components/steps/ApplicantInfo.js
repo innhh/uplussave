@@ -175,7 +175,7 @@ const ApplicantInfo = ({ applyData, setApplyData, movePrev, moveNext, showAlert 
                 multiline
                 maxLength="200"
             ></InputControl>
-
+ 
             <StyledFormControlLabel
                 control={<Switch name="minor" checked={applyData.minor === "미성년자"} onChange={handleMinor} color="secondary" />}
                 label="미성년자 여부"

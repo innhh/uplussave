@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/uplussave/static/css/main.69eda509.chunk.css",
-    "main.js": "/uplussave/static/js/main.0f96945f.chunk.js",
-    "main.js.map": "/uplussave/static/js/main.0f96945f.chunk.js.map",
+    "main.js": "/uplussave/static/js/main.ede0ae15.chunk.js",
+    "main.js.map": "/uplussave/static/js/main.ede0ae15.chunk.js.map",
     "runtime-main.js": "/uplussave/static/js/runtime-main.9ae2f5ba.js",
     "runtime-main.js.map": "/uplussave/static/js/runtime-main.9ae2f5ba.js.map",
     "static/js/2.4256ba94.chunk.js": "/uplussave/static/js/2.4256ba94.chunk.js",
     "static/js/2.4256ba94.chunk.js.map": "/uplussave/static/js/2.4256ba94.chunk.js.map",
     "index.html": "/uplussave/index.html",
-    "precache-manifest.6e72fb7f606de37711ce7594a1542d80.js": "/uplussave/precache-manifest.6e72fb7f606de37711ce7594a1542d80.js",
+    "precache-manifest.0cf058b4b07b9eef3919406fcf4457ae.js": "/uplussave/precache-manifest.0cf058b4b07b9eef3919406fcf4457ae.js",
     "service-worker.js": "/uplussave/service-worker.js",
     "static/css/main.69eda509.chunk.css.map": "/uplussave/static/css/main.69eda509.chunk.css.map",
     "static/js/2.4256ba94.chunk.js.LICENSE.txt": "/uplussave/static/js/2.4256ba94.chunk.js.LICENSE.txt",
@@ -19,6 +19,6 @@
     "static/js/runtime-main.9ae2f5ba.js",
     "static/js/2.4256ba94.chunk.js",
     "static/css/main.69eda509.chunk.css",
-    "static/js/main.0f96945f.chunk.js"
+    "static/js/main.ede0ae15.chunk.js"
   ]
 }

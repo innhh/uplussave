@@ -73,7 +73,83 @@ const FileSize = styled.div`
 
 const RecieptInfo = ({ applyData, setApplyData, movePrev, moveNext, showAlert, setBackDropOpen }) => {
     const applyOf = (key) => (x) => setApplyData({ ...applyData, [key]: x });
-    const handleClick = (e) => {
+    // const handleClick = (e) => {
+    //     let index = null;
+    //     for (let i = 0; i < 5; i++) {
+    //         if (!applyData.b_files.some((x) => x.index === i)) {
+    //             index = i;
+    //             break;
+    //         }
+    //     }
+
+    //     let $file = $("<input/>", { type: "file" });
+    //     $file.on("change", function (e) {
+    //         if (!e.target.files || !e.target.files[0]) {
+    //             alert("1");
+    //             alert(e.target.files);
+    //             $file.remove();
+    //             return;
+    //         }
+
+    //         if (e.target.files[0].type.startsWith("image")) {
+    //             setBackDropOpen(true);
+    //             new Compressor(e.target.files[0], {
+    //                 maxWidth: 1000,
+    //                 maxHeight: 1000,
+    //                 quality: 0.8,
+    //                 success(result) {
+    //                     _append(result);
+    //                     setBackDropOpen(false);
+    //                     $file.remove();
+    //                 },
+    //                 error(err) {
+    //                     window.alert("다시 시도해 주세요");
+    //                     setBackDropOpen(false);
+    //                     $file.remove();
+    //                 },
+    //             });
+    //         } else {
+    //             alert("2");
+    //             _append(e.target.files[0]);
+    //             $file.remove();
+    //         }
+
+    //         function _append(file) {
+    //             alert("3");
+    //             const size = applyData.b_files.reduce((sum, b_file) => (sum += b_file.file.size), 0) + file.size;
+    //             if (size >= 2097152) {
+    //                 alert("4");
+    //                 showAlert("첨부파일이 총 2MB이상입니다. 다시 첨부해 주시기 바랍니다");
+    //                 return;
+    //             }
+
+    //             alert("5");
+    //             const b_files = [...applyData.b_files];
+    //             b_files.push({
+    //                 index: index,
+    //                 file: file,
+    //             });
+    //             setApplyData({ ...applyData, b_files });
+    //         }
+    //     });
+    //     $file.trigger("click");
+    // };
+
+    const handleRemoveFile = (index, e) => {
+        const b_files = [...applyData.b_files];
+        const idx = b_files.findIndex((x) => x.index === index);
+        if (idx > -1) {
+            b_files.splice(idx, 1);
+            setApplyData({ ...applyData, b_files });
+        }
+    };
+
+    const handleChangeFile = (e) => {
+        if (!e.target.files || !e.target.files[0]) {
+            e.target.value = "";
+            return;
+        }
+
         let index = null;
         for (let i = 0; i < 5; i++) {
             if (!applyData.b_files.some((x) => x.index === i)) {
@@ -82,58 +158,41 @@ const RecieptInfo = ({ applyData, setApplyData, movePrev, moveNext, showAlert, s
             }
         }
 
-        let $file = $("<input/>", { type: "file" });
-        $file.on("change", function (e) {
-            if (!e.target.files || !e.target.files[0]) {
-                $file.remove();
+        if (e.target.files[0].type.startsWith("image")) {
+            e.persist();
+            setBackDropOpen(true);
+            new Compressor(e.target.files[0], {
+                maxWidth: 1000,
+                maxHeight: 1000,
+                quality: 0.8,
+                success: function (result) {
+                    _append(result);
+                    setBackDropOpen(false);
+                    e.target.value = "";
+                },
+                error: function (err) {
+                    window.alert("다시 시도해 주세요");
+                    setBackDropOpen(false);
+                    e.target.value = "";
+                },
+            });
+        } else {
+            _append(e.target.files[0]);
+            e.target.value = "";
+        }
+
+        function _append(file) {
+            const size = applyData.b_files.reduce((sum, b_file) => (sum += b_file.file.size), 0) + file.size;
+            if (size >= 2097152) {
+                showAlert("첨부파일이 총 2MB이상입니다. 다시 첨부해 주시기 바랍니다");
                 return;
             }
 
-            if (e.target.files[0].type.startsWith("image")) {
-                setBackDropOpen(true);
-                new Compressor(e.target.files[0], {
-                    maxWidth: 1000,
-                    maxHeight: 1000,
-                    quality: 0.8,
-                    success(result) {
-                        _append(result);
-                        setBackDropOpen(false);
-                        $file.remove();
-                    },
-                    error(err) {
-                        window.alert("다시 시도해 주세요");
-                        setBackDropOpen(false);
-                        $file.remove();
-                    },
-                });
-            } else {
-                _append(e.target.files[0]);
-                $file.remove();
-            }
-
-            function _append(file) {
-                const size = applyData.b_files.reduce((sum, b_file) => (sum += b_file.file.size), 0) + file.size;
-                if (size >= 2097152) {
-                    showAlert("첨부파일이 총 2MB이상입니다. 다시 첨부해 주시기 바랍니다");
-                    return;
-                }
-
-                const b_files = [...applyData.b_files];
-                b_files.push({
-                    index: index,
-                    file: file,
-                });
-                setApplyData({ ...applyData, b_files });
-            }
-        });
-        $file.trigger("click");
-    };
-
-    const handleRemoveFile = (index, e) => {
-        const b_files = [...applyData.b_files];
-        const idx = b_files.findIndex((x) => x.index === index);
-        if (idx > -1) {
-            b_files.splice(idx, 1);
+            const b_files = [...applyData.b_files];
+            b_files.push({
+                index: index,
+                file: file,
+            });
             setApplyData({ ...applyData, b_files });
         }
     };
@@ -150,7 +209,7 @@ const RecieptInfo = ({ applyData, setApplyData, movePrev, moveNext, showAlert, s
 
             <Collapse in={applyData.paper_method === "파일첨부"}>
                 <SubContainer>
-                    <Button
+                    {/* <Button
                         variant="contained"
                         color="secondary"
                         disableElevation
@@ -159,7 +218,9 @@ const RecieptInfo = ({ applyData, setApplyData, movePrev, moveNext, showAlert, s
                         size="small"
                     >
                         첨부하기({applyData.b_files.length}/5)
-                    </Button>
+                    </Button> */}
+
+                    <input type="file" onChange={handleChangeFile}></input>
                     <Volumes>
                         {(
                             applyData.b_files.reduce((sum, b_file) => (sum += b_file.file.size), 0) /
